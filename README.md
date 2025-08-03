@@ -13,17 +13,17 @@ Generation (Text Generation): Uses a Transformer model (T5) to generate a more f
 This is a lightweight implementation of Retrieval-Augmented Generation (RAG) for domain-specific QA.
 
 # Components
-Knowledge Base:
+## Knowledge Base:
 
 A CSV file (faq.csv) containing healthcare questions and their corresponding answers.
 
-Sentence Embeddings (Retriever):
+## Sentence Embeddings (Retriever):
 
 Uses all-MiniLM-L6-v2 from Sentence-Transformers to embed user queries and knowledge base questions into dense vectors.
 
 Performs semantic similarity search using cosine similarity.
 
-Answer Generator:
+## Answer Generator:
 
 Uses t5-small from Hugging Face Transformers to generate answers using the format:
 
@@ -33,11 +33,11 @@ Chat Loop:
 Accepts multi-turn user input and produces context-aware answers.
 
 # Workflow 
-Data Loading:
+## Data Loading:
 
 The chatbot loads the healthcare FAQs into a pandas DataFrame.
 
-Preprocessing:
+## Preprocessing:
 
 All questions in the FAQ are encoded into embeddings using a SentenceTransformer model and stored in memory.
 
@@ -45,19 +45,19 @@ User Query Handling:
 
 When a user types a question, it is also encoded into an embedding.
 
-Retrieval:
+## Retrieval:
 
 The system computes cosine similarity between the user query and all questions in the knowledge base.
 
 It retrieves the top-k most similar FAQ entries.
 
-Answer Generation:
+## Answer Generation:
 
 The answers from the retrieved FAQs are concatenated into a single context string.
 
 The context and user question are passed to a T5 model to generate a more natural and comprehensive response.
 
-Conversation:
+## Conversation:
 
 The user can continue asking questions in a loop.
 
