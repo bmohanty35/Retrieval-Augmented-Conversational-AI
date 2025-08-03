@@ -1,73 +1,78 @@
-# Retrieval-Augmented-Conversational-AI
-
 # Healthcare Assistant Chatbot (RAG-based)
 A conversational AI system for answering health-related questions using a hybrid of retrieval-based and generative NLP methods.
 
-# Project Overview
-This chatbot uses a combination of:
+## 1. Objective
+To build a chatbot that can answer healthcare-related questions by:
 
-Retrieval (Semantic Search): Finds the most relevant answers from a pre-defined FAQ knowledge base using sentence embeddings.
+Retrieving the most relevant questions and answers from a predefined FAQ dataset.
 
-Generation (Text Generation): Uses a Transformer model (T5) to generate a more fluent, coherent answer based on the retrieved content.
+Generating a natural language response tailored to the user's question using generative language models.
 
-This is a lightweight implementation of Retrieval-Augmented Generation (RAG) for domain-specific QA.
+## Underlying Concept: Retrieval-Augmented Generation (RAG)
+RAG is a hybrid approach that combines retrieval-based and generation-based techniques. It retrieves relevant documents (or FAQ entries in this case) and feeds them into a text generation model to produce a final response.
 
-# Components
-## Knowledge Base:
+This allows the model to:
 
-A CSV file (faq.csv) containing healthcare questions and their corresponding answers.
+Ground its answers in factual knowledge (retrieved from the FAQ).
 
-## Sentence Embeddings (Retriever):
+Generate fluent, context-aware responses.
 
-Uses all-MiniLM-L6-v2 from Sentence-Transformers to embed user queries and knowledge base questions into dense vectors.
+## Step-by-Step Theoretical Pipeline
+### 1. Knowledge Base Preparation
+A CSV file containing healthcare FAQs was used, with each entry having:
 
-Performs semantic similarity search using cosine similarity.
+A "question" column representing frequently asked health-related queries.
 
-## Answer Generator:
+An "answer" column with expert-curated responses.
 
-Uses t5-small from Hugging Face Transformers to generate answers using the format:
+This serves as the knowledge base for retrieval.
 
-question: <user_input> context: <combined_retrieved_answers>
-Chat Loop:
+### 2. Embedding Creation using Sentence Transformers
+To enable similarity-based retrieval, each FAQ question is converted into a vector representation (embedding) using a pre-trained model (all-MiniLM-L6-v2). These embeddings capture semantic meaning and allow for comparison with user queries.
 
-Accepts multi-turn user input and produces context-aware answers.
+### 3. User Query Processing
+When the user enters a question:
 
-# Workflow 
-## Data Loading:
+It is also embedded using the same model.
 
-The chatbot loads the healthcare FAQs into a pandas DataFrame.
+Cosine similarity is calculated between the query and all FAQ embeddings.
 
-## Preprocessing:
+The top-k most similar entries (e.g., 3) are selected as relevant context.
 
-All questions in the FAQ are encoded into embeddings using a SentenceTransformer model and stored in memory.
+### 4. Answer Generation using T5 Model
+Instead of directly returning a retrieved answer:
 
-User Query Handling:
+A context-aware prompt is formed: question: <user_input> context: <retrieved_answers>.
 
-When a user types a question, it is also encoded into an embedding.
+This prompt is fed into a pre-trained generative model (t5-small), which produces a fluent answer.
 
-## Retrieval:
+This step ensures the final output is more natural and informative, even if the user query is not an exact match to existing FAQs.
 
-The system computes cosine similarity between the user query and all questions in the knowledge base.
+### 5. Interactive Chat Loop
+The chatbot runs in a loop:
 
-It retrieves the top-k most similar FAQ entries.
+Accepts multiple user queries.
 
-## Answer Generation:
+Retrieves relevant context each time.
 
-The answers from the retrieved FAQs are concatenated into a single context string.
+Generates an answer and outputs it.
 
-The context and user question are passed to a T5 model to generate a more natural and comprehensive response.
+Allows the user to exit gracefully with commands like exit or stop.
 
-## Conversation:
+## Summary of Results and Benefits
+Dynamic Response Generation: Even if the user’s input doesn’t exactly match any FAQ, the chatbot can still generate appropriate, contextually relevant answers.
 
-The user can continue asking questions in a loop.
+Accuracy and Fluency: The use of retrieved expert answers grounds the response in factual information, while T5 ensures fluent generation.
 
-Typing "exit" ends the session.
+Scalability: New FAQs can be added to the CSV without retraining the model.
 
-# Benefits
-Domain-Specific Accuracy: Uses curated FAQs for reliable responses.
+Domain Relevance: Since the knowledge base is healthcare-focused, the chatbot avoids off-topic responses.
 
-Conversational Ability: Generates fluid, human-like answers rather than copy-pasting FAQ text.
+## Advantages of RAG in Healthcare Chatbots
+Combines precision (retrieval) with creativity (generation)
 
-Lightweight: Can run on CPU for small to moderate workloads.
+Reduces hallucination seen in purely generative chatbots
 
+Easily interpretable pipeline with modular steps
 
+Can be updated frequently by modifying the CSV without retraining
