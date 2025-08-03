@@ -1,7 +1,7 @@
 # Healthcare Assistant Chatbot (RAG-based)
 A conversational AI system for answering health-related questions using a hybrid of retrieval-based and generative NLP methods.
 
-## 1. Objective
+## Objective
 To build a chatbot that can answer healthcare-related questions by:
 
 Retrieving the most relevant questions and answers from a predefined FAQ dataset.
